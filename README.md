@@ -8,10 +8,10 @@
 
 PHP client library(SDK) for Google Maps API Web Services
 
-[![Latest Stable Version](https://poser.pugx.org/yidas/google-maps-services/v/stable?format=flat-square)](https://packagist.org/packages/yidas/google-maps-services)
-[![License](https://poser.pugx.org/yidas/google-maps-services/license?format=flat-square)](https://packagist.org/packages/yidas/google-maps-services)
-[![Total Downloads](https://poser.pugx.org/yidas/google-maps-services/downloads?format=flat-square)](https://packagist.org/packages/yidas/google-maps-services)
-[![Monthly Downloads](https://poser.pugx.org/yidas/google-maps-services/d/monthly?format=flat-square)](https://packagist.org/packages/yidas/google-maps-services)
+[![Latest Stable Version](https://poser.pugx.org/php-collective/google-maps-services/v/stable?format=flat-square)](https://packagist.org/packages/php-collective/google-maps-services)
+[![License](https://poser.pugx.org/php-collective/google-maps-services/license?format=flat-square)](https://packagist.org/packages/php-collective/google-maps-services)
+[![Total Downloads](https://poser.pugx.org/php-collective/google-maps-services/downloads?format=flat-square)](https://packagist.org/packages/php-collective/google-maps-services)
+[![Monthly Downloads](https://poser.pugx.org/php-collective/google-maps-services/d/monthly?format=flat-square)](https://packagist.org/packages/php-collective/google-maps-services)
 
 
 OUTLINE
@@ -116,7 +116,7 @@ INSTALLATION
 
 Run Composer in your project:
 
-    composer require yidas/google-maps-services
+    composer require php-collective/google-maps-services
 
 Then you could call it after Composer is loaded depended on your PHP framework:
 

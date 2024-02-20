@@ -8,7 +8,7 @@ use GuzzleHttp\Client as HttpClient;
 /**
  * Google Maps PHP Client
  *
- * @author  Nick Tsai <myintaer@gmail.com>
+ * @author Nick Tsai <myintaer@gmail.com>
  * @version 1.0.0
  *
  * @method array directions(string $origin, string $destination, array $params = [])
@@ -32,15 +32,19 @@ class Client
 {
     /**
      * Google Maps Platform base API host
+     *
+     * @var string
      */
-    const API_HOST = 'https://maps.googleapis.com';
+    public const API_HOST = 'https://maps.googleapis.com';
 
     /**
      * For service autoload
      *
      * @see http://php.net/manual/en/language.namespaces.rules.php
+     *
+     * @var string
      */
-    const SERVICE_NAMESPACE = "\\yidas\\googleMaps\\";
+    public const SERVICE_NAMESPACE = '\\yidas\\googleMaps\\';
 
     /**
      * For Client-Service API method director
@@ -89,18 +93,19 @@ class Client
     /**
      * Google Maps default language
      *
-     * @var string ex. 'zh-TW'
+     * @var string|null E.g. 'zh-TW'
      */
     protected $language;
 
     /**
      * Constructor
      *
-     * @param string|array $optParams API Key or option parameters
+     * @param array|string $optParams API Key or option parameters
      *  'key' => Google API Key
      *  'clientID' => Google clientID
      *  'clientSecret' => Google clientSecret
-     * @return self
+     *
+     * @throws \Exception
      */
     public function __construct($optParams)
     {
@@ -113,30 +118,27 @@ class Client
         }
 
         // Assignment
-        $key = isset($optParams['key']) ? $optParams['key'] : null;
-        $clientID = isset($optParams['clientID']) ? $optParams['clientID'] : null;
-        $clientSecret = isset($optParams['clientSecret']) ? $optParams['clientSecret'] : null;
-        $defaultLang = isset($optParams['language']) ? $optParams['language'] : null;
+        $key = $optParams['key'] ?? null;
+        $clientID = $optParams['clientID'] ?? null;
+        $clientSecret = $optParams['clientSecret'] ?? null;
+        $defaultLang = $optParams['language'] ?? null;
 
         // Use API Key
         if ($key) {
-
             if ($clientID || $clientSecret) {
-                throw new Exception("clientID/clientSecret should not set when using key", 400);
+                throw new Exception('clientID/clientSecret should not set when using key', 400);
             }
 
-            $this->apiKey = (string) $key;
+            $this->apiKey = (string)$key;
         }
+
         // Use clientID/clientSecret
-        elseif ($clientID && $clientSecret) {
-
-            $this->clientID = (string) $clientID;
-            $this->clientSecret = (string) $clientSecret;
+        if (!$clientID || !$clientSecret) {
+            throw new Exception('Unable to set Client credential due to your wrong params', 400);
         }
-        else {
 
-            throw new Exception("Unable to set Client credential due to your wrong params", 400);
-        }
+        $this->clientID = (string)$clientID;
+        $this->clientSecret = (string)$clientSecret;
 
         // Default Language setting
         if ($defaultLang) {
@@ -146,10 +148,8 @@ class Client
         // Load GuzzleHttp\Client
         $this->httpClient = new HttpClient([
             'base_uri' => self::API_HOST,
-            'timeout'  => 5.0,
+            'timeout' => 5.0,
         ]);
-
-        return $this;
     }
 
     /**
@@ -158,10 +158,11 @@ class Client
      * @param string $apiPath
      * @param array $params
      * @param string $method HTTP request method
-     * @param string $body
-     * @return GuzzleHttp\Psr7\Response
+     * @param string|null $body
+     *
+     * @return \Psr\Http\Message\ResponseInterface
      */
-    public function request($apiPath, $params=[], $method='GET', $body=null)
+    public function request($apiPath, array $params = [], $method = 'GET', $body = null)
     {
         // Guzzle request options
         $options = [
@@ -196,10 +197,11 @@ class Client
     /**
      * Set default language for Google Maps API
      *
-     * @param string $language ex. 'zh-TW'
-     * @return self
+     * @param string|null $language ex. 'zh-TW'
+     *
+     * @return $this
      */
-    public function setLanguage($language=null)
+    public function setLanguage($language = null)
     {
         $this->language = $language;
 
@@ -211,18 +213,23 @@ class Client
      *
      * All service methods from Client calling would leave out the first argument (Client itself).
      *
-     * @param string Client's method name
-     * @param array Method arguments
-     * @return mixed Current service method return
      * @example
      *  $equal = \yidas\googleMaps\Geocoding::geocode($client, 'Address');
      *  $equal = $client->geocode('Address');
+     *
+     * @param string $method Client's method name
+     * @param array $arguments Method arguments
+     *
+     * @throws \Exception
+     *
+     * @return mixed Current service method return
      */
-    public function __call($method, $arguments)
+    public function __call(string $method, array $arguments)
     {
         // Matching self::$serviceMethodMap is required
-        if (!isset(self::$serviceMethodMap[$method]))
-            throw new Exception("Call to undefined method ".__CLASS__."::{$method}()", 400);
+        if (!isset(self::$serviceMethodMap[$method])) {
+            throw new Exception('Call to undefined method ' . self::class . "::{$method}()", 400);
+        }
 
         // Get the service mapped by method
         $service = self::$serviceMethodMap[$method];
@@ -230,6 +237,9 @@ class Client
         // Fill Client in front of arguments
         array_unshift($arguments, $this);
 
-        return call_user_func_array([self::SERVICE_NAMESPACE . $service, $method], $arguments);
+        /** @var callable $callback */
+        $callback = [self::SERVICE_NAMESPACE . $service, $method];
+
+        return call_user_func_array($callback, $arguments);
     }
 }

@@ -5,31 +5,32 @@ namespace yidas\googleMaps;
 /**
  * Google Maps Abstract Service
  *
- * @author  Nick Tsai <myintaer@gmail.com>
- * @since   1.0.0
+ * @author Nick Tsai <myintaer@gmail.com>
+ * @since 1.0.0
  */
 abstract class Service
 {
     /**
      * Define by each service
      *
-     * @param string
+     * @var string
      */
-    const API_PATH = '';
+    public const API_PATH = '';
 
     /**
      * Request Handler
      *
-     * @param Client $client
+     * @param \yidas\googleMaps\Client $client
      * @param string $apiPath
      * @param array $params
      * @param string $method HTTP request method
-     * @return array|mixed Formated result
+     * @param string|null $body
+     *
+     * @return mixed|array Formated result
      */
-    protected static function requestHandler(Client $client, $apiPath, $params, $method='GET')
+    protected static function requestHandler(Client $client, $apiPath, $params, $method = 'GET', $body = null)
     {
-        $body = null;
-        if (isset($params['body'])) {
+        if ($body === null && isset($params['body'])) {
             $body = $params['body'];
             unset($params['body']);
         }
@@ -39,13 +40,16 @@ abstract class Service
         $result = json_decode($result, true);
 
         // Error Handler
-        if (200 != $response->getStatusCode())
+        if ($response->getStatusCode() !== 200) {
             return $result;
+        }
+
         // Error message Checker (200 situation form Google Maps API)
-        elseif (isset($result['error_message']))
+        if (isset($result['error_message'])) {
             return $result;
+        }
 
         // `results` parsing from Google Maps API, while pass parsing on error
-        return  isset($result['results']) ? $result['results'] : $result;
+        return $result['results'] ?? $result;
     }
 }
