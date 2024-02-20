@@ -78,8 +78,6 @@ The PHP Client for Google Maps Services is a PHP Client library for the followin
 REQUIREMENTS
 ------------
 
-- PHP 5.4.0+\|7.0+ or higher
-
 ### API keys
 
 Each Google Maps Web Service request requires an API key or client ID. API keys

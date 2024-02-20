@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<ruleset name="App">
+    <config name="installed_paths" value="../../php-collective/code-sniffer"/>
+
+    <arg value="nps"/>
+
+    <file>src/</file>
+    <file>tests/</file>
+
+    <exclude-pattern>/src/Dto/</exclude-pattern>
+
+    <rule ref="PhpCollective"/>
+
+    <rule ref="PhpCollective.Commenting.DocBlock.DocBlockMissing">
+        <severity>0</severity>
+    </rule>
+
+    <rule ref="PhpCollective.PHP.DeclareStrictTypes">
+        <properties>
+            <property name="linesCountBeforeDeclare" value="0"/>
+        </properties>
+    </rule>
+</ruleset>
