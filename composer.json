@@ -10,12 +10,20 @@
         "source": "https://github.com/yidas/google-maps-services-php"
     },
     "require": {
-        "php": ">=5.4",
+        "php": ">=7.4",
         "guzzlehttp/guzzle": "~6.5.6|^7.4.3"
     },
     "autoload": {
         "psr-4": {
             "yidas\\googleMaps\\": "src/"
+        }
+    },
+    "require-dev": {
+        "php-collective/code-sniffer": "^0.2.4"
+    },
+    "config": {
+        "allow-plugins": {
+            "dealerdirect/phpcodesniffer-composer-installer": true
         }
     }
 }

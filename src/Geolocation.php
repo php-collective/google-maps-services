@@ -7,7 +7,7 @@ use yidas\googleMaps\Client;
 
 /**
  * Directions Service
- * 
+ *
  * @author  Nick Tsai <myintaer@gmail.com>
  * @since   1.0.0
  * @see https://developers.google.com/maps/documentation/geolocation/
@@ -23,14 +23,14 @@ class Geolocation extends Service
      * Geolocate
      *
      * @param Client $client
-     * @param array Body parameters
+     * @param array $bodyParams
      * @return array Result
      */
     public static function geolocate(Client $client, $bodyParams=[])
     {
         // Google API request body format
         $body = json_encode($bodyParams);
-        
+
         return self::requestHandler($client, self::API_PATH, [], 'POST', $body);
     }
 }

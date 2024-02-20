@@ -11,14 +11,22 @@ use GuzzleHttp\Client as HttpClient;
  * @author  Nick Tsai <myintaer@gmail.com>
  * @version 1.0.0
  *
- * @method array directions(string $origin, string $destination, array $params=[])
- * @method array distanceMatrix(string $origin, string $destination, array $params=[])
- * @method array elevation(string $locations, array $params=[])
- * @method array geocode(string $address, array $params=[])
- * @method array reverseGeocode(string $latlng, array $params=[])
- * @method array route(array $origin, array $destination, array $params=[])
- * @method array geolocate(array $bodyParams=[])
- * @method array timezone(string $location, string $timestamp=null, array $params=[])
+ * @method array directions(string $origin, string $destination, array $params = [])
+ *   $origin and $destination can be of any type as long as they cast to a string consumable by the google api
+ * @method array distanceMatrix(string|array $origin, string|array $destination, array $params = [])
+ *   if $origin or $destination are arrays, they will be converted to strings separated by a pipe (|)
+ * @method array route(array $origin, array $destination, array $params = [])
+ * @method array geolocate(array $bodyParams = [])
+ * @method array elevation(string|array $locations, array $options = [])
+ *   $locations can be a string in the format of 'lat,lon' or 'lat1,lon1|lat2,lon2|...'
+ *   If an array of scalar values, it will assume it's [lat,lon]. Any additional elements will be ignored
+ *   If an array of arrays, it will assume it's [[lat1,lon1],[lat2,lon2],...]
+ * @method array geocode(string $address, array $params = [])
+ *   $address can be of any type that will cast to a string consumable by the google apis
+ * @method array reverseGeocode(array|string $location, array $params = [])
+ *   If $location is an array, it will be assumed to be [lat, lon]. If a string that appears to represent a lat, lon, it will be treated as such. Otherwise it will be treated as a place id.
+ * @method array timezone(array|string $location, string|int|\DateTime $timestamp = null, array $params = [])
+ *   $location can be "lat,lon" string or [lat,lon] array. If $timestamp is a non-numeric string, it will be parsed by \DateTime. If that fails, it will use the value of time(). If it is numeric, it will be used as-is.
  */
 class Client
 {
@@ -94,7 +102,7 @@ class Client
      *  'clientSecret' => Google clientSecret
      * @return self
      */
-    function __construct($optParams)
+    public function __construct($optParams)
     {
         // Quick setting for API Key
         if (is_string($optParams)) {

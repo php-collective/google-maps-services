@@ -25,7 +25,7 @@ class Routes extends Service
      * @param array $params Query parameters
      * @return array Result
      */
-    public static function route(Client $client, $origin, $destination, $params=[])
+    public static function route(Client $client, $origin, $destination, array $params = [])
     {
         $requestData = $params;
         $requestData['origin'] = $origin;
