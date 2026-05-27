@@ -5,8 +5,6 @@
     <arg value="nps"/>
 
     <file>src/</file>
-    <file>tests/</file>
-
     <exclude-pattern>/src/Dto/</exclude-pattern>
 
     <rule ref="PhpCollective"/>
